@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html lang=ja>
+<meta charset=utf-8>
+<title>物件情報簡易記述方式</title>
+<link rel=stylesheet href=spec.css>
+<style>
+  header {
+    margin-bottom: 1.5em;
+  }
+  header h1 {
+    margin-bottom: 0;
+  }
+  header time:not([hidden]) {
+    display: block;
+    font-size: 90%;
+    margin-top: .5em;
+    margin-bottom: .5em;
+  }
+  dl {
+    margin-left: 3em;
+  }
+  dt {
+    font-weight: bolder;
+  }
+  dd p {
+    margin: 0;
+  }
+</style>
+
+<header>
+  <h1>物件情報簡易記述方式</h1>
+  <time datetime=2019-08-06>令和元(2019)年8月6日</time>
+</header>
+
+<p>本方式は <a href=https://html.spec.whatwg.org/>HTML</a> および
+<a href=https://schema.org/>Schema.org</a>
+によって物件情報を簡易的に記述するものです。
+
+<p>本方式は、
+不動産取引に必要な情報を完全に記述することを目的としたものではありません。
+
+<section>
+  <h1>記述方法</h1>
+
+  <p>ある物件を HTML 文書中に次のように記述しているとします。
+
+  <pre><code>&lt;section>
+  &lt;figure>
+    &lt;img src=photo.jpeg>
+  &lt;/figure>
+  &lt;a href=details.html>
+    &lt;strong>窓の大きな2LDKマンション&lt;/strong>
+  &lt;/a>
+  &lt;span>新宿区西新宿&lt;/span>
+  &lt;span>63,000円/月&lt;/span>
+  &lt;span>2LDK&lt;/span>
+&lt;/section>  </code></pre>
+
+  <p>ここに必要な構造を追加していきます。
+  
+  <div class=note>
+
+    <p>これは一例であって、
+    HTML 仕様に従った任意の方法で記述して構いません。
+
+    <p>以後の説明においても、
+    ここに示した方法のほか、 HTML として同等の他の方法を使うことができます。
+    
+  </div>
+
+  <section>
+    <h1>1. 物件種別</h1>
+
+    <p>物件の種別に応じた属性を、
+    物件を表す一番外側の要素の開始タグに指定します。
+    種別に応じた <code>additionalType</code> も挿入します。
+
+  <pre><code>&lt;section <mark>itemscope itemtype="http://schema.org/Residence http://schema.org/Product"</mark>>
+  <mark>&lt;link itemprop=additionalType href=data:,dwelling></mark>
+  &lt;figure>
+    &lt;img src=photo.jpeg>
+  &lt;/figure>
+  &lt;a href=details.html>
+    &lt;strong>窓の大きな2LDKマンション&lt;/strong>
+  &lt;/a>
+  &lt;span>新宿区西新宿&lt;/span>
+  &lt;span>63,000円/月&lt;/span>
+  &lt;span>2LDK&lt;/span>
+&lt;/section>  </code></pre>
+
+    <p>次のような値を指定します。
+  
+    <dl>
+      <div>
+        <dt>住居
+        <dd>
+          <p><code>itemscope itemtype="http://schema.org/Residence http://schema.org/Product"</code>
+          <p><code>&lt;link itemprop=additionalType href=data:,dwelling></code>
+      </div>
+      <div>
+        <dt>シェアハウス
+        <dd>
+          <p><code>itemscope itemtype="http://schema.org/Accommodation http://schema.org/Product"</code>
+          <p><code>&lt;link itemprop=additionalType href=data:,dwelling></code>
+          <p><code>&lt;link itemprop=additionalType href=data:,shared></code>
+      </div>
+      <div>
+        <dt>事務所
+        <dd>
+          <p><code>itemscope itemtype="http://schema.org/Accommodation http://schema.org/Product"</code>
+          <p><code>&lt;link itemprop=additionalType href=data:,forBusiness></code>
+      </div>
+      <div>
+        <dt>その他の建物
+        <dd>
+          <p><code>itemscope itemtype="http://schema.org/Accommodation http://schema.org/Product"</code>
+      </div>
+      <div>
+        <dt>土地
+        <dd>
+          <p><code>itemscope itemtype="http://schema.org/Place http://schema.org/Product"</code>
+          <p><code>&lt;link itemprop=additionalType href=data:,land></code>
+      </div>
+      <div>
+        <dt>その他
+        <dd>
+          <p><code>itemscope itemtype="http://schema.org/Place http://schema.org/Product"</code>
+      </div>
+    </dl>
+  </section>
+
+  <section>
+    <h1>2. 概要</h1>
+
+    <p>物件の名前、画像、詳細ページへのリンクに
+    <code>itemprop</code> 属性を追加します。
+
+  <pre><code>&lt;section itemscope itemtype="http://schema.org/Residence http://schema.org/Product">
+  &lt;link itemprop=additionalType href=data:,dwelling>
+  &lt;figure>
+    &lt;img src=photo.jpeg <mark>itemprop=image</mark>>
+  &lt;/figure>
+  &lt;a href=details.html <mark>itemprop=url</mark>>
+    &lt;strong <mark>itemprop=name</mark>>窓の大きな2LDKマンション&lt;/strong>
+  &lt;/a>
+  &lt;span>新宿区西新宿&lt;/span>
+  &lt;span>63,000円/月&lt;/span>
+  &lt;span>2LDK&lt;/span>
+&lt;/section>  </code></pre>
+
+    <p>物件の名前に <code>itemprop=name</code> を指定します。
+    物件を紹介する Web ページのタイトルでも構いませんし、
+    物件自体の建物名でも構いません。
+
+    <p>物件を代表する写真の <code>img</code> 要素に
+    <code>itemprop=image</code>
+    を指定します。
+
+    <p>物件の詳細ページへのリンクに <code>itemprop=url</code>
+    を指定します。
+
+  </section>
+  
+  <section>
+    <h1>3. 所在</h1>
+
+    <p>物件の位置情報を追加します。
+
+<pre><code>&lt;section itemscope itemtype="http://schema.org/Residence http://schema.org/Product">
+  &lt;link itemprop=additionalType href=data:,dwelling>
+  &lt;figure>
+    &lt;img src=photo.jpeg itemprop=image>
+  &lt;/figure>
+  &lt;a href=details.html itemprop=url>
+    &lt;strong itemprop=name>窓の大きな2LDKマンション&lt;/strong>
+  &lt;/a>
+  &lt;span>新宿区西新宿&lt;/span>
+  <mark>&lt;meta itemprop=address content="新宿区西新宿2丁目8番1号"></mark>
+  &lt;span>63,000円/月&lt;/span>
+  &lt;span>2LDK&lt;/span>
+&lt;/section>  </code></pre>
+
+    <p>既に住所が記述されている場合、
+    <code>itemprop</code> 属性を追加するだけです。
+
+    <pre><code>&lt;span <mark>itemprop=address</mark>>新宿区西新宿2丁目8番1号&lt;/span></code></pre>
+
+    <p>表示上住所の一部が省略されている場合や、
+    最寄駅など住所以外の表示しかない場合は、
+    <code>meta</code> 要素を使います。
+
+    <pre><code>&lt;span>新宿駅徒歩10分&lt;/span>
+<mark>&lt;meta itemprop=address content="新宿区西新宿2丁目8番1号"></mark></code></pre>
+
+    <p>緯度・経度がわかっている場合は、
+    次のように記述します。
+
+<pre><code><mark>&lt;span itemprop=geo itemscope itemtype="http://schema.org/GeoCoordinates"></mark>
+<mark>  &lt;meta itemprop=latitude content=35.689634></mark>
+<mark>  &lt;meta itemprop=longitude content=139.692101></mark>
+<mark>&lt;/span></mark></code></pre>
+
+    <p>住所の記述と緯度・経度の記述のどちらかは必ず指定してください。
+
+  </section>
+  
+  <section>
+    <h1>4. 価格</h1>
+
+    <p>物件の価格の情報を追加します。
+
+  <pre><code>&lt;section itemscope itemtype="http://schema.org/Residence http://schema.org/Product">
+  &lt;link itemprop=additionalType href=data:,dwelling>
+  &lt;figure>
+    &lt;img src=photo.jpeg itemprop=image>
+  &lt;/figure>
+  &lt;a href=details.html itemprop=url>
+    &lt;strong itemprop=name>窓の大きな2LDKマンション&lt;/strong>
+  &lt;/a>
+  &lt;span>新宿区西新宿&lt;/span>
+  &lt;meta itemprop=address content="新宿区西新宿2丁目8番1号">
+  <mark>&lt;link itemprop=businessFunction href=http://purl.org/goodrelations/v1#LeaseOut></mark>
+  &lt;span <mark>itemprop=offers itemscope itemtype="http://schema.org/Offer"</mark>>
+    63,000円/月
+    <mark>&lt;meta itemprop=priceCurrency content=JPY></mark>
+    <mark>&lt;meta itemprop=price content="63000"></mark>
+    <mark>&lt;meta itemprop=data:,paymentUnit content=month></mark>
+  &lt;/span>
+  &lt;span>2LDK&lt;/span>
+&lt;/section>  </code></pre>
+
+    <p>本物件の取引が賃貸か売買かによって、
+    <code>itemprop=businessFunction</code> を指定します。
+
+  <dl>
+    <div>
+      <dt>賃貸
+      <dd><code>&lt;link itemprop=businessFunction href=http://purl.org/goodrelations/v1#LeaseOut></code>
+    </div>
+    <div>
+      <dt>売買
+      <dd><code>&lt;link itemprop=businessFunction href=http://purl.org/goodrelations/v1#Sell></code>
+    </div>
+  </dl>
+  
+    <p>価格の情報を <code>itemprop=offers</code> として記述します。
+    手数料、敷金など複数の価格の表示がある場合、
+    賃料や売価として代表的に表示している値を1つ記述してください。
+
+    <p><code>itemprop=offers</code> の要素内に、
+    通貨単位 (日本円は <code>JPY</code>) と価格を指定します。
+    価格は桁区切りの <code>,</code> を含まない整数としてください。
+    表示は万円単位でも、 <code>itemprop=price</code>
+    の値は円単位とするようご注意ください。
+
+    <p>賃貸の場合、
+    <code>itemprop=offers</code> の要素内に、
+    価格の期間を指定します。
+
+  <dl>
+    <div>
+      <dt>月額
+      <dd><code>&lt;meta itemprop=data:,paymentUnit content=month></code>
+    </div>
+    <div>
+      <dt>日額
+      <dd><code>&lt;meta itemprop=data:,paymentUnit content=day></code>
+    </div>
+  </dl>
+  
+  </section>
+
+</section>
+
+<section>
+  <h1>検証</h1>
+
+  <p>記述に誤りが含まれていないか Google の
+  <a href=https://search.google.com/structured-data/testing-tool>構造化データ
+  テストツール</a>で検証できます。
+  このツールでエラーが表示されないか確認することをおすすめします。
+
+  <p>本方式は最低限の記述のみを求めているため、
+  「推奨フィールド」を指定するべきなどの警告が表示されることがあります。
+  他の目的で利用しないのであれば、警告は無視して構いません。
+    
+  <div class=note>
+
+    <p>なお、これは本方式に特化したツールではありませんから、
+    すべての問題を検出できるわけではありません。
+      
+  </div>
+    
+</section>
+  
+<section id=license lang=en>
+  <h1>License</h1>
+    
+  <p>&copy; 2019 <a href=https://ond-inc.com>OND Inc</a>.
+  
+  <p>This work is licensed under
+  a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative
+  Commons Attribution-ShareAlike 4.0 International License</a>.
+    
+</section>
