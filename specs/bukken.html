@@ -29,7 +29,7 @@
 
 <header>
   <h1>物件情報簡易記述方式</h1>
-  <time datetime=2019-08-06>令和元(2019)年8月6日</time>
+  <time datetime=2019-08-07>令和元(2019)年8月7日</time>
 </header>
 
 <p>本方式は <a href=https://html.spec.whatwg.org/>HTML</a> および
@@ -152,6 +152,21 @@
     物件を紹介する Web ページのタイトルでも構いませんし、
     物件自体の建物名でも構いません。
 
+    <p>名前に当たる部分に付加情報が含まれる場合は、
+    メインとなる部分だけに <code>itemprop=name</code> を指定してください。
+    
+    <pre><code>&lt;a href=details.html <mark>itemprop=url</mark>>
+  [NEW!] 新宿
+  <mark>&lt;span itemprop=name></mark>窓の大きな2LDKマンション<mark>&lt;/span></mark>
+  712号室
+&lt;/a></code></pre>
+
+    <p>表示上名前が省略されている場合は、
+    <code>meta</code> 要素を使います。
+
+    <pre><code>&lt;a href=details.html <mark>itemprop=url</mark>>窓の大きな...&lt;/a>
+<mark>&lt;meta itemprop=name content="窓の大きな2LDKマンション"></mark></code></pre>
+    
     <p>物件を代表する写真の <code>img</code> 要素に
     <code>itemprop=image</code>
     を指定します。
@@ -201,7 +216,8 @@
 <mark>&lt;/span></mark></code></pre>
 
     <p>住所の記述と緯度・経度の記述のどちらかは必ず指定してください。
-
+    両方指定することもできます。
+    
   </section>
   
   <section>
